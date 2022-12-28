@@ -14,9 +14,9 @@ const Input = styled.input`
 const BoardInput = function({name, placeholder, value, onChange}) {
   return (
     <Input
+  
         name={name}
-        placeholder={placeholder}
-        onChange={onChange}
+        placeholder={placeholder}      onChange={onChange}
         value={value}
     />
   );   

@@ -32,9 +32,8 @@ function LikeButton({boardId, boardTitle, boardContent, boardWriter}) {
     axios
       .post("/like/likeCounts", variables)
       .then((response) => {
-        if (!response.data.success) {
-          alert("좋아요 정보를 가져오는데 실패했습니다.");
-          return;
+        if (response.data.success === undefined) {
+          return alert("좋아요 정보를 가져오는데 실패했습니다.");
         }
         let responsedData = response.data.likeCounts;
         setLikeCounts(responsedData);
@@ -46,9 +45,9 @@ function LikeButton({boardId, boardTitle, boardContent, boardWriter}) {
     axios
       .post("/like/liked", variables)
       .then((response) => {
-        if (!response.data.success) {
-          alert("좋아요 정보를 가져오는데 실패했습니다.");
-          return;
+        if (response.data.success === undefined) {
+          
+          return alert("좋아요 정보를 가져오는데 실패했습니다.");
         }
         let responsedData = response.data.liked;
         setUserLiked(responsedData);
@@ -60,9 +59,9 @@ function LikeButton({boardId, boardTitle, boardContent, boardWriter}) {
     axios
       .post(`/like/dislike`, variables)
       .then((response) => {
-        if (!response.data.success) {
-          alert("좋아요 삭제를 실패했습니다.");
-          return;
+        if (response.data.success === undefined) {
+          
+          return alert("좋아요 삭제를 실패했습니다.");
         }
         setLikeCounts(likeCounts - 1);
       })
@@ -73,9 +72,9 @@ function LikeButton({boardId, boardTitle, boardContent, boardWriter}) {
     axios
       .post(`/like`, variables)
       .then((response) => {
-        if (!response.data.success) {
-          alert("좋아요 등록을 실패했습니다.");
-          return;
+        if (response.data.success === undefined) {
+          
+          return alert("좋아요 등록을 실패했습니다.");
         }
         setLikeCounts(likeCounts + 1);
       })
