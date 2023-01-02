@@ -12,7 +12,6 @@ import LogoutButton from "../components/Common/LogoutButton";
 import Header from "../components/Common/Header";
 import Footer from "../components/Common/Footer";
 import { Pagination } from '@mui/material';
-
 const Profilebox = styled.div`
   width: 100%;
   text-align: center;
@@ -146,7 +145,7 @@ function BoardView({ history, match }) {
   };
   return (
     <>
-      <Header title="구직계시판" link="/officeboard" />
+      <Header title="구인계시판" link="/offerboard" />
       <StyledBox backColor="#fafafa" padding="10px 0px" lineHeight="auto">
         <Profilebox>
           <UserProfile boardPage={true} />

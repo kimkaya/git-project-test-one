@@ -156,6 +156,16 @@ function BoardView({ history, match }) {
           <Profilebtn>
             <LogoutButton />
           </Profilebtn>
+          <br/>
+          <Profilebtn>
+            <Link to="/board">자유 게시판</Link>
+          </Profilebtn>
+          <Profilebtn>
+            <Link to="/officeboard">구직게시판</Link>
+          </Profilebtn>
+          <Profilebtn>
+            <Link to="/offerboard">구인게시판</Link>
+          </Profilebtn>
         </Profilebox>
         <BoardForm onSubmit={onSubmit}>
           <BoardInput
