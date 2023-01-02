@@ -10,7 +10,7 @@ import RegisterButton from "../components/Register/RegisterButton";
 import RegisterSelect from "../components/Register/RegisterSelect";
 import SchoolSearchResult from "../components/Register/SchoolSearchResult";
 import { useDispatch } from "react-redux";
-import { registerUser } from "../_actions/user_actions";
+import { registerOffice } from "../_actions/user_actions";
 import { withRouter } from "react-router-dom";
 
 const industry = [
@@ -24,7 +24,7 @@ for (let i = 1962; i < 2004; i++) {
   entranceYearArray.push(i);
 }
 
-function OfficeRegister({ history }) {
+function OfficeRegister({ history ,rpost}) {
   const dispatch = useDispatch();
   const [inputs, setInput] = useState({
     userId: "",
@@ -37,7 +37,7 @@ function OfficeRegister({ history }) {
 
   const { userId, userPw, userEmail, userNickname, usableId, UserCareer} = inputs;
   const [option, setOption] = useState("2021");
-  const [schoolInput, setSchoolInput] = useState("");
+  const [officeInput, setOfficeInput] = useState("");
   const [searchResult, setSearchResult] = useState(industry);
   const [showSchoolList, setShowSchoolList] = useState(true);
   const [overIdLength, setOverIdLength] = useState(false);
@@ -69,23 +69,31 @@ function OfficeRegister({ history }) {
     if (overIdLength) {
       return;
     }
-    axios
-      .post(`/officeregister/checkId/${userId}`, { id: userId })
-      .then((response) => {
-        console.log(response);
-        if (response.status === 200) {
+    let data = {
+      id: String(userId)
+    };
+  
+    let api = `/officeregister/checkId/${userId}`
+  
+  
+      rpost({ api: api, data: data }, (err, response) => {
+        console.log("2", api);
+        console.log("2", data);
+        if (err) {
+          console.log(response.state===200);
           setInput({
             ...inputs,
             usableId: true,
           });
           alert("사용가능한 아이디입니다.");
         }
+        else {
+          console.log(err);
+          alert("다른 아이디를 입력해주세요");
+        }
       })
-      .catch((error) => {
-        console.log(error);
-        alert("다른 아이디를 입력해주세요");
-      });
-  };
+    } 
+    
 
   const handleOption = (e) => {
     setOption(e.target.value);
@@ -93,8 +101,8 @@ function OfficeRegister({ history }) {
 
   const handleSearch = (e) => {
     setShowSchoolList(true);
-    setSchoolInput(e.target.value);
-    const result = SCHOOL_ARR.filter((school) => {
+    setOfficeInput(e.target.value);
+    const result = industry.filter((school) => {
       return school.includes(e.target.value);
     });
     setSearchResult(result);
@@ -102,7 +110,7 @@ function OfficeRegister({ history }) {
 
   const handleSearchClick = (e) => {
     e.preventDefault();
-    setSchoolInput(e.target.textContent);
+    setOfficeInput(e.target.textContent);
     setShowSchoolList(false);
   };
 
@@ -114,21 +122,21 @@ function OfficeRegister({ history }) {
       email: userEmail,
       nickname: userNickname,
       entranceYear: option,
-      school: schoolInput,
+      office: officeInput,
     };
     if (overIdLength || overPwLength) {
       return;
     } else if (!userId || !userPw || !userEmail || !userNickname) {
       alert("필수 항목을 작성해주세요");
       return;
-    } else if (!SCHOOL_ARR.includes(schoolInput)) {
-      alert("학교를 선택해주세요");
+    } else if (!industry.includes(officeInput)) {
+      alert("분야");
       return;
     } else if (usableId === false) {
       alert("아이디 중복확인을 해주세요");
       return;
     } else {
-      dispatch(registerUser(body))
+      dispatch(registerOffice(body))
       .then((response) => {
         if (response.payload.success) {
           alert("회원가입을 완료했습니다.");
@@ -199,7 +207,7 @@ function OfficeRegister({ history }) {
               type="text"
               placeholder="내가 지원하는 산업분야"
               onChange={handleSearch}
-              value={schoolInput}
+              value={officeInput}
             />
             <RegisterInput
             labelName='경력'
@@ -208,7 +216,7 @@ function OfficeRegister({ history }) {
             onChange={onChange}
             value={UserCareer}/>
 
-            {schoolInput && showSchoolList && (
+            {officeInput && showSchoolList && (
               <SchoolSearchResult
                 datas={searchResult}
                 handleSearchClick={handleSearchClick}
@@ -222,4 +230,4 @@ function OfficeRegister({ history }) {
   );
 }
 
-export default withRouter(OfficeRegister);
+export default withRouter(OfficeRegister)

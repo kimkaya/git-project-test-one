@@ -12,11 +12,16 @@ import SchoolSearchResult from "../components/Register/SchoolSearchResult";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../_actions/user_actions";
 import { withRouter } from "react-router-dom";
+import { Button } from "@mui/material";
+// import rpost from '../post';
+// import rpost from '../'
+// import rpost from '../util/post.jsx';
+
 
 const SCHOOL_ARR = [
-'카카오',
-'현대',
-'삼성',
+  '카카오',
+  '현대',
+  '삼성',
 ].sort();
 
 const entranceYearArray = [];
@@ -24,7 +29,7 @@ for (let i = 1962; i < 2004; i++) {
   entranceYearArray.push(i);
 }
 
-function Register({ history }) {
+function Register({ history, rpost }) {
   const dispatch = useDispatch();
   const [inputs, setInput] = useState({
     userId: "",
@@ -41,6 +46,40 @@ function Register({ history }) {
   const [showSchoolList, setShowSchoolList] = useState(true);
   const [overIdLength, setOverIdLength] = useState(false);
   const [overPwLength, setOverPwLength] = useState(false);
+
+
+  const signpost = () => {
+
+  let data = {
+    id: userId
+  };
+
+  let api = `/register/checkId/${userId}`
+
+
+    rpost({ api: api, data: data }, (err, response) => {
+      console.log("2", api);
+      console.log("2", data);
+      if (err) {
+        console.log(response.state===200);
+        setInput({
+          ...inputs,
+          usableId: true,
+        });
+        alert("사용가능한 아이디입니다.");
+      }
+      else {
+        console.log(err);
+        alert("다른 아이디를 입력해주세요");
+      }
+    })
+  }
+
+  
+
+  // setRegisterpost(RegisterObject) {
+  // this.RegisterpostStr = RegisterpostObject.Str ;
+  // }
 
   const onChange = (e) => {
     const { value, name } = e.target;
@@ -68,22 +107,70 @@ function Register({ history }) {
     if (overIdLength) {
       return;
     }
-    axios
-      .post(`/register/checkId/${userId}`, { id: userId })
-      .then((response) => {
-        console.log(response);
-        if (response.status === 200) {
-          setInput({
-            ...inputs,
-            usableId: true,
-          });
-          alert("사용가능한 아이디입니다.");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("다른 아이디를 입력해주세요");
-      });
+
+      let data = {
+        id: String(userId)
+      };
+    
+      let api = `/register/checkId/${userId}`
+    
+    
+        rpost({ api: api, data: data }, (err, response) => {
+          console.log("2", api);
+          console.log("2", data);
+          if (err) {
+            console.log(response.state===200);
+            setInput({
+              ...inputs,
+              usableId: true,
+            });
+            alert("사용가능한 아이디입니다.");
+          }
+          else {
+            console.log(err);
+            alert("다른 아이디를 입력해주세요");
+          }
+        })
+      
+
+    // let api = '/rpost';
+
+    // let data = {
+    //   id:1,
+    //   name:"무열",
+    //   age:29
+    // };
+
+    // let testtt;
+
+    // rpost.post({api: api, data: data},(err, response) => {
+    //   if(err) {
+    //     console.log(err);
+    //     // asaaa(null);
+    //     // testtt = null;
+    //   }
+    //   else {
+    //     console.log(response);
+    //     // asaaa(response);
+    //     // testtt = response;
+
+    //   }
+    // }) 
+    // axios
+    //   .post(`/register/checkId/${userId}`, { id: userId })
+    //   .then((response) => {
+    //     console.log(response);
+    //     if (response.status === 200) {
+    //       setInput({
+    //         ...inputs,
+    //         usableId: true,
+    //       });
+    //       alert("사용가능한 아이디입니다.");
+    //     }
+    //     else{
+    //       console.log(error);
+    //       alert("다른 아이디를 입력해주세요");}
+    //   })
   };
 
   const handleOption = (e) => {
@@ -121,30 +208,32 @@ function Register({ history }) {
       alert("필수 항목을 작성해주세요");
       return;
     } else if (!SCHOOL_ARR.includes(schoolInput)) {
-      alert("학교를 선택해주세요");
+      alert("기업을 선택해주세요.");
       return;
     } else if (usableId === false) {
       alert("아이디 중복확인을 해주세요");
       return;
     } else {
       dispatch(registerUser(body))
-      .then((response) => {
-        if (response.payload.success) {
-          alert("회원가입을 완료했습니다.");
-          history.push("./");
-        } else {
-          alert("회원가입에 실패했습니다.");
-        }
-      })
-      .catch((error) => console.log(error));
+        .then((response) => {
+          if (response.payload.success) {
+            alert("회원가입을 완료했습니다.");
+            history.push("./");
+          } else {
+            alert("회원가입에 실패했습니다.");
+            // ((error) => console.log(error));
+          }
+        })
     }
   };
+
   return (
     <StyledContainer>
       <div>
         <Header link={"./"} title="회원가입" backbutton={true} />
         <StyledBox padding="18px 16px" lineHeight="20px">
           <form onSubmit={checkId}>
+            <Button onClick={e => {signpost(e)}}>버튼</Button>
             <RegisterInput
               labelName="아이디"
               name="userId"
@@ -156,7 +245,7 @@ function Register({ history }) {
             {overIdLength && (
               <LimitOnLength>아이디를 8자 이내로 입력해주세요</LimitOnLength>
             )}
-            <CheckIdButton onClick={checkId}>중복체크</CheckIdButton>
+            <CheckIdButton onClick={(e) => { checkId(e) }}>중복체크</CheckIdButton>
           </form>
           <form onSubmit={SignUp}>
             <RegisterInput

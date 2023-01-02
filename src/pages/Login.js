@@ -7,6 +7,7 @@ import logo from "../assets/logo.png";
 import LoginInput from "../components/Login/LoginInput";
 import LoginButton from "../components/Login/LoginButton";
 import StyledContainer from "../components/Style/styledContainer";
+import { Button } from "@mui/material";
 
 const FlexBox = styled.div`
   display: flex;
@@ -39,7 +40,7 @@ const StyledSpan = styled.span`
   letter-spacing: -0.05rem;
 `;
 
-function Login({ history }) {
+function Login({ history, rpost }) {
   const dispatch = useDispatch();
   const [inputs, setInput] = useState({
     userId: "",
@@ -77,6 +78,54 @@ function Login({ history }) {
     }
   };
 
+  const test = (e) => {
+
+    let api = '/rpost';
+    
+    let data = {
+      id:1,
+      name:"무열",
+      age:29
+    };
+
+    let testtt;
+    console.log("test",api);
+    console.log("test",data);
+
+
+    rpost({api: api, data: data},(err, response) => {
+        console.log("2",api);
+        console.log("2",data);
+        if(err) {
+          console.log(err);
+          // asaaa(null);
+          // testtt = null;
+        }
+        else {
+          console.log(response);
+          // asaaa(response);
+          // testtt = response;
+          
+        }})
+    
+    // post.rpost({api: api, data: data},(err, response) => {
+    //   console.log("2",api);
+    //   console.log("2",data);
+    //   if(err) {
+    //     console.log(err);
+    //     // asaaa(null);
+    //     // testtt = null;
+    //   }
+    //   else {
+    //     console.log(response);
+    //     // asaaa(response);
+    //     // testtt = response;
+        
+    //   }
+    // }) 
+
+  }
+
   return (
     <StyledContainer>
       <div>
@@ -96,6 +145,7 @@ function Login({ history }) {
             onChange={onChange}
             value={userId}
           />
+          <LoginButton type="submit">로그인</LoginButton>
           <LoginInput
             type="password"
             name="userPw"
@@ -103,7 +153,8 @@ function Login({ history }) {
             onChange={onChange}
             value={userPw}
           />
-          <LoginButton type="submit">로그인</LoginButton>
+          {/* <Button onClick={e => {test(e)}}>test</Button> */}
+          
         </form>
         <StyledDiv>
           <Link to="./register">
