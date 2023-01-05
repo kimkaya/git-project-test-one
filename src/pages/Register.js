@@ -41,7 +41,7 @@ function Register({ history, rpost }) {
 
   const { userId, userPw, userEmail, userNickname, usableId } = inputs;
   const [option, setOption] = useState("2021");
-  const [schoolInput, setSchoolInput] = useState("");
+  const [company, setCompany] = useState("");
   const [searchResult, setSearchResult] = useState(SCHOOL_ARR);
   const [showSchoolList, setShowSchoolList] = useState(true);
   const [overIdLength, setOverIdLength] = useState(false);
@@ -58,8 +58,8 @@ function Register({ history, rpost }) {
 
 
     rpost({ api: api, data: data }, (err, response) => {
-      console.log("2", api);
-      console.log("2", data);
+      // console.log("2", api);
+      // console.log("2", data);
       if (err) {
         console.log(response.state===200);
         setInput({
@@ -179,7 +179,7 @@ function Register({ history, rpost }) {
 
   const handleSearch = (e) => {
     setShowSchoolList(true);
-    setSchoolInput(e.target.value);
+    setCompany(e.target.value);
     const result = SCHOOL_ARR.filter((school) => {
       return school.includes(e.target.value);
     });
@@ -188,7 +188,7 @@ function Register({ history, rpost }) {
 
   const handleSearchClick = (e) => {
     e.preventDefault();
-    setSchoolInput(e.target.textContent);
+    setCompany(e.target.textContent);
     setShowSchoolList(false);
   };
 
@@ -200,17 +200,17 @@ function Register({ history, rpost }) {
       email: userEmail,
       nickname: userNickname,
       entranceYear: option,
-      school: schoolInput,
+      company: company,
     };
     if (overIdLength || overPwLength) {
       return;
     } else if (!userId || !userPw || !userEmail || !userNickname) {
       alert("필수 항목을 작성해주세요");
       return;
-    } else if (!SCHOOL_ARR.includes(schoolInput)) {
+    } else if (!SCHOOL_ARR.includes(company)) {
       alert("기업을 선택해주세요.");
       return;
-    } else if (usableId === false) {
+    } else if (usableId == false) {
       alert("아이디 중복확인을 해주세요");
       return;
     } else {
@@ -287,10 +287,10 @@ function Register({ history, rpost }) {
               type="text"
               placeholder="다니고있는 회사를 입력해주세요"
               onChange={handleSearch}
-              value={schoolInput}
+              value={company}
             />
 
-            {schoolInput && showSchoolList && (
+            {company && showSchoolList && (
               <SchoolSearchResult
                 datas={searchResult}
                 handleSearchClick={handleSearchClick}

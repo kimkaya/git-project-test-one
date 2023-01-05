@@ -46,7 +46,7 @@ const PaginationBox = styled.div`
   justify-content: center;
 `;
 
-function BoardView({ history, match }) {
+function OfficeBoard({ history, match }) {
 
   const userFrom = localStorage.getItem("userId");
   const writerFrom = localStorage.getItem("userNickname");
@@ -56,12 +56,12 @@ function BoardView({ history, match }) {
   const [BoardWriter, setBoardWriter] = useState("익명");
   const [Content, setContent] = useState([]);
   const [inputs, setInput] = useState({
-    boardTitle: "",
-    boardContent: "",
+    officeboardTitle: "",
+    officeboardContent: "",
   });
 
 
-  const { boardTitle, boardContent } = inputs;
+  const { officeboardTitle, officeboardContent } = inputs;
 
 
   useEffect(() => {
@@ -71,7 +71,7 @@ function BoardView({ history, match }) {
 
   const FetchBoard = () => {
     axios
-      .post("/board/getBoard", { page: currentPage })
+      .post("/officeboard/getBoard", { page: currentPage })
       .then((response) => {
         if (response.data.success) {
           setContent(response.data.boards);
@@ -108,30 +108,30 @@ function BoardView({ history, match }) {
   const onSubmit = (e) => {
 
     e.preventDefault();
-    if (boardTitle === undefined || boardTitle === null || boardTitle !== "" ) {
+    if (officeboardTitle === undefined || officeboardTitle === null || officeboardTitle !== "" ) {
       alert(`제목을 작성해주세요`);
       return;
     } 
-    else if (boardContent === undefined || boardContent === null || boardContent !=="") {
+    else if (officeboardContent === undefined || officeboardContent === null || officeboardContent !=="") {
       // alert(`내용을 작성해주세요`);
       // return;
       return alert('내용을 작성해주세요');
     } 
-    else if (boardContent.length > 300) {
+    else if (officeboardContent.length > 300) {
     return alert(`내용을 300자 이내로 작성해주세요`);
       
     }
     let variables = {
       userFrom: userFrom,
-      boardTitle: boardTitle,
-      boardContent: boardContent,
+      boardTitle: officeboardTitle,
+      boardContent: officeboardContent,
       boardWriter: BoardWriter,
     };
-    axios.post("/board/upload", variables).then((response) => {
+    axios.post("/officeboard/upload", variables).then((response) => {
       if (response.status === 200) {
         setInput({
-          boardTitle: "",
-          boardContent: "",
+          officeboardTitle: "",
+          officeboardContent: "",
         });
         FetchBoard();
       } else {
@@ -171,13 +171,13 @@ function BoardView({ history, match }) {
           <BoardInput
             name="boardTitle"
             placeholder="제목을 작성해주세요."
-            value={boardTitle}
+            value={officeboardTitle}
             onChange={e => {onChange(e)}}
           />
           <BoardTextarea
             name="boardContent"
             placeholder="여기를 눌러서 글을 작성할 수 있습니다."
-            value={boardContent}
+            value={officeboardContent}
             onChange={e => {onChange(e)}}
           />
           <CheckNickname
@@ -220,4 +220,4 @@ function BoardView({ history, match }) {
   );
 }
 
-export default withRouter(BoardView);
+export default withRouter(OfficeBoard);
